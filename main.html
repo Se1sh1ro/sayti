@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude API Course | Главная</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Шапка */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 12, 41, 0.9);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo p {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 0;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #a78bfa;
+        }
+
+        nav a.active {
+            color: #a78bfa;
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        /* Hero секция */
+        .hero {
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+            backdrop-filter: blur(5px);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #a78bfa, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            opacity: 0.8;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* КНОПКИ ПО ЦЕНТРУ */
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 36px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-accent:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5);
+        }
+
+        /* Статистика */
+        .stats {
+            padding: 40px 0;
+        }
+
+        .stats-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 24px 32px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            min-width: 160px;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a78bfa, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+
+        .features {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 50px;
+            background: linear-gradient(135deg, #fff, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: #a78bfa;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            opacity: 0.7;
+            line-height: 1.5;
+        }
+
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.5;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            nav ul {
+                justify-content: center;
+                gap: 1.5rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .section-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <div>
+                    <h1>Claude API Course</h1>
+                    
+                </div>
+            </div>
+            <nav>
+                <nav><ul><li><a href="main.html">Главная</a></li><li><a href="lect.html">Лекции</a></li><li><a href="lab.html">Лабораторные</a></li><li><a href="test.html" class="active">Тест</a></li></ul></nav>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <span class="badge"><i class="fas fa-graduation-cap"></i> Учебно-методический комплекс</span>
+                <h1>Изучайте <span style="background: linear-gradient(135deg, #a78bfa, #c084fc); -webkit-background-clip: text; background-clip: text; color: transparent;">Claude API</span><br>и большие языковые модели</h1>
+                <p class="hero-description">
+                    Полный курс лекций и лабораторных работ для студентов IT-специальностей.<br>
+                    Освойте программное взаимодействие с API Anthropic и создание приложений на базе LLM.
+                </p>
+                
+                
+                <div class="hero-buttons">
+                    <a href="lect.html" class="btn btn-primary">
+                        <i class="fas fa-book-open"></i> Лекции
+                    </a>
+                    <a href="lab.html" class="btn btn-secondary">
+                        <i class="fas fa-flask"></i> Лабораторные
+                    </a>
+                    <a href="test.html" class="btn btn-accent">
+                        <i class="fas fa-question-circle"></i> Тест
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-number">6</div><div class="stat-label">Лекций</div></div>
+                    <div class="stat-card"><div class="stat-number">8</div><div class="stat-label">Лабораторных</div></div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">📖 Что вы изучите</h2>
+                <div class="features-grid">
+                    <div class="feature-card"><div class="feature-icon"><i class="fas fa-history"></i></div><h3>6 лекций</h3><p>От истории Anthropic до архитектурных особенностей Claude</p></div>
+                    <div class="feature-card"><div class="feature-icon"><i class="fas fa-laptop-code"></i></div><h3>8 лабораторных работ</h3><p>Практическая работа с API, промптами и анализом данных</p></div>
+                    <div class="feature-card"><div class="feature-icon"><i class="fas fa-shield-alt"></i></div><h3>Безопасность ИИ</h3><p>Изучение Конституционного ИИ и механизмов отказоустойчивости</p></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    
+</body>
+</html>

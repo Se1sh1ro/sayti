@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест | Claude API Course</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); min-height: 100vh; color: #fff; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        
+        header { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; background: rgba(15, 12, 41, 0.95); }
+        header .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; max-width: 1200px; }
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo i { font-size: 2.2rem; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .logo h1 { font-size: 1.5rem; font-weight: 700; }
+        .logo p { font-size: 0.7rem; opacity: 0.7; }
+        nav ul { display: flex; list-style: none; gap: 2rem; }
+        nav a { color: #fff; text-decoration: none; font-weight: 500; transition: all 0.3s; }
+        nav a:hover { color: #a78bfa; }
+        nav a.active { color: #a78bfa; position: relative; }
+        nav a.active::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 2px; background: linear-gradient(135deg, #667eea, #764ba2); }
+        
+        .test-container { padding: 40px 0 60px; }
+        .test-header { text-align: center; margin-bottom: 40px; }
+        .test-header h1 { font-size: 2.5rem; background: linear-gradient(135deg, #fff, #a78bfa); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .test-header p { opacity: 0.7; margin-top: 10px; }
+        
+        .test-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-radius: 30px; padding: 40px; border: 1px solid rgba(255,255,255,0.1); }
+        .question { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .question-text { font-size: 1rem; font-weight: 600; margin-bottom: 15px; color: #fff; }
+        .option { display: block; margin: 8px 0; cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: background 0.3s; }
+        .option:hover { background: rgba(255,255,255,0.05); }
+        .option input { margin-right: 12px; width: 18px; height: 18px; cursor: pointer; }
+        
+        .test-actions { display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 28px; font-size: 1rem; font-weight: 600; border-radius: 50px; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; }
+        .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+        
+        .test-result { margin-top: 30px; padding: 20px; border-radius: 20px; text-align: center; display: none; }
+        .test-result.success { background: rgba(76, 175, 80, 0.2); border: 1px solid #4caf50; display: block; }
+        .test-result.fail { background: rgba(244, 67, 54, 0.2); border: 1px solid #f44336; display: block; }
+        
+        .progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 30px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(135deg, #667eea, #764ba2); width: 0%; transition: width 0.3s; border-radius: 4px; }
+        
+        footer { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; margin-top: 20px; }
+        footer p { opacity: 0.5; font-size: 0.85rem; }
+        
+        @media (max-width: 768px) {
+            header .container { flex-direction: column; text-align: center; }
+            nav ul { justify-content: center; gap: 1.5rem; }
+            .test-card { padding: 20px; }
+            .question-text { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="logo"><i class="fas fa-brain"></i><div><h1>Claude API Course</h1><p>Образовательный портал</p></div></div>
+            <nav><ul><li><a href="main.html">Главная</a></li><li><a href="lect.html">Лекции</a></li><li><a href="lab.html">Лабораторные</a></li><li><a href="test.html" class="active">Тест</a></li></ul></nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="test-container">
+                <div class="test-header">
+                    <h1>📝 Итоговый тест (30 вопросов)</h1>
+                    <p>Проверьте свои знания о Claude API на основе лекционного курса</p>
+                </div>
+
+                <div class="test-card">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    
+                    <form id="quizForm">
+                        <!-- Вопрос 1 -->
+                        <div class="question">
+                            <div class="question-text">1. В каком году была основана компания Anthropic?</div>
+                            <label class="option"><input type="radio" name="q1" value="a"> A) 2019</label>
+                            <label class="option"><input type="radio" name="q1" value="b"> B) 2020</label>
+                            <label class="option"><input type="radio" name="q1" value="c"> C) 2021</label>
+                            <label class="option"><input type="radio" name="q1" value="d"> D) 2022</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">2. Кто из перечисленных входит в число основателей Anthropic?</div>
+                            <label class="option"><input type="radio" name="q2" value="a"> A) Сэм Альтман</label>
+                            <label class="option"><input type="radio" name="q2" value="b"> B) Дарио Амодеи (Dario Amodei)</label>
+                            <label class="option"><input type="radio" name="q2" value="c"> C) Илон Маск</label>
+                            <label class="option"><input type="radio" name="q2" value="d"> D) Джеффри Хинтон</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">3. Как зарегистрирована компания Anthropic с юридической точки зрения?</div>
+                            <label class="option"><input type="radio" name="q3" value="a"> A) Частное акционерное общество</label>
+                            <label class="option"><input type="radio" name="q3" value="b"> B) Некоммерческая организация</label>
+                            <label class="option"><input type="radio" name="q3" value="c"> C) Корпорация общественного блага (Public Benefit Corporation)</label>
+                            <label class="option"><input type="radio" name="q3" value="d"> D) Государственное предприятие</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">4. Какой феномен описывает склонность LLM подстраиваться под предполагаемые предпочтения пользователя?</div>
+                            <label class="option"><input type="radio" name="q4" value="a"> A) Галлюцинация</label>
+                            <label class="option"><input type="radio" name="q4" value="b"> B) Сикофантия (sycophancy)</label>
+                            <label class="option"><input type="radio" name="q4" value="c"> C) Дрейф модели</label>
+                            <label class="option"><input type="radio" name="q4" value="d"> D) Переобучение</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">5. Какая модель Claude является самой быстрой и дешёвой?</div>
+                            <label class="option"><input type="radio" name="q5" value="a"> A) Claude 3 Opus</label>
+                            <label class="option"><input type="radio" name="q5" value="b"> B) Claude 3 Sonnet</label>
+                            <label class="option"><input type="radio" name="q5" value="c"> C) Claude 3 Haiku</label>
+                            <label class="option"><input type="radio" name="q5" value="d"> D) Claude 3.5 Sonnet</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">6. Какова стоимость Claude 3 Opus за 1 миллион входных токенов?</div>
+                            <label class="option"><input type="radio" name="q6" value="a"> A) $0.25</label>
+                            <label class="option"><input type="radio" name="q6" value="b"> B) $3.00</label>
+                            <label class="option"><input type="radio" name="q6" value="c"> C) $15.00</label>
+                            <label class="option"><input type="radio" name="q6" value="d"> D) $75.00</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">7. Какая модель Claude рекомендуется для научных исследований и юридического анализа?</div>
+                            <label class="option"><input type="radio" name="q7" value="a"> A) Claude 3 Haiku</label>
+                            <label class="option"><input type="radio" name="q7" value="b"> B) Claude 3 Sonnet</label>
+                            <label class="option"><input type="radio" name="q7" value="c"> C) Claude 3 Opus</label>
+                            <label class="option"><input type="radio" name="q7" value="d"> D) Любая модель</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">8. Какова стоимость подписки Claude Pro?</div>
+                            <label class="option"><input type="radio" name="q8" value="a"> A) $10 в месяц</label>
+                            <label class="option"><input type="radio" name="q8" value="b"> B) $20 в месяц</label>
+                            <label class="option"><input type="radio" name="q8" value="c"> C) $30 в месяц</label>
+                            <label class="option"><input type="radio" name="q8" value="d"> D) $50 в месяц</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">9. Какое ограничение по количеству сообщений действует в бесплатной версии Claude.ai?</div>
+                            <label class="option"><input type="radio" name="q9" value="a"> A) 10 сообщений в час</label>
+                            <label class="option"><input type="radio" name="q9" value="b"> B) 20 сообщений за 4 часа</label>
+                            <label class="option"><input type="radio" name="q9" value="c"> C) 40 сообщений за 4 часа</label>
+                            <label class="option"><input type="radio" name="q9" value="d"> D) 100 сообщений в день</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">10. Какой стратегический инвестор вложил в Anthropic $4 млрд?</div>
+                            <label class="option"><input type="radio" name="q10" value="a"> A) Google</label>
+                            <label class="option"><input type="radio" name="q10" value="b"> B) Amazon</label>
+                            <label class="option"><input type="radio" name="q10" value="c"> C) Microsoft</label>
+                            <label class="option"><input type="radio" name="q10" value="d"> D) Salesforce</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">11. Каков стандартный размер контекстного окна для Claude 3?</div>
+                            <label class="option"><input type="radio" name="q11" value="a"> A) 128 000 токенов</label>
+                            <label class="option"><input type="radio" name="q11" value="b"> B) 200 000 токенов</label>
+                            <label class="option"><input type="radio" name="q11" value="c"> C) 500 000 токенов</label>
+                            <label class="option"><input type="radio" name="q11" value="d"> D) 1 000 000 токенов</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">12. Какой максимальный объём контекстного окна доступен через API Claude?</div>
+                            <label class="option"><input type="radio" name="q12" value="a"> A) 200 000 токенов</label>
+                            <label class="option"><input type="radio" name="q12" value="b"> B) 500 000 токенов</label>
+                            <label class="option"><input type="radio" name="q12" value="c"> C) 1 000 000 токенов</label>
+                            <label class="option"><input type="radio" name="q12" value="d"> D) 2 000 000 токенов</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">13. Какое явление описывает снижение точности воспроизведения информации из центральной части длинного контекстного окна?</div>
+                            <label class="option"><input type="radio" name="q13" value="a"> A) Сикофантия</label>
+                            <label class="option"><input type="radio" name="q13" value="b"> B) Lost in the middle (потерянный в середине)</label>
+                            <label class="option"><input type="radio" name="q13" value="c"> C) Дрейф контекста</label>
+                            <label class="option"><input type="radio" name="q13" value="d"> D) Фрагментация памяти</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">14. Какова точность извлечения фактов из середины контекста (100–150 тыс. токенов) для Claude 3?</div>
+                            <label class="option"><input type="radio" name="q14" value="a"> A) ~95%</label>
+                            <label class="option"><input type="radio" name="q14" value="b"> B) ~85%</label>
+                            <label class="option"><input type="radio" name="q14" value="c"> C) ~72-80%</label>
+                            <label class="option"><input type="radio" name="q14" value="d"> D) ~50%</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">15. Какой максимальный размер файла можно загрузить в Claude через веб-интерфейс?</div>
+                            <label class="option"><input type="radio" name="q15" value="a"> A) 10 МБ</label>
+                            <label class="option"><input type="radio" name="q15" value="b"> B) 30 МБ</label>
+                            <label class="option"><input type="radio" name="q15" value="c"> C) 50 МБ</label>
+                            <label class="option"><input type="radio" name="q15" value="d"> D) 100 МБ</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">16. На какой архитектуре базируются модели Claude?</div>
+                            <label class="option"><input type="radio" name="q16" value="a"> A) Рекуррентные нейронные сети (RNN)</label>
+                            <label class="option"><input type="radio" name="q16" value="b"> B) Свёрточные нейронные сети (CNN)</label>
+                            <label class="option"><input type="radio" name="q16" value="c"> C) Трансформер (Transformer)</label>
+                            <label class="option"><input type="radio" name="q16" value="d"> D) Генеративно-состязательные сети (GAN)</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">17. Каков оценочный объём параметров Claude 3 Opus?</div>
+                            <label class="option"><input type="radio" name="q17" value="a"> A) 10-50 миллиардов</label>
+                            <label class="option"><input type="radio" name="q17" value="b"> B) 50-100 миллиардов</label>
+                            <label class="option"><input type="radio" name="q17" value="c"> C) 100-200 миллиардов</label>
+                            <label class="option"><input type="radio" name="q17" value="d"> D) 200-400 миллиардов</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">18. Что означает аббревиатура RLAIF?</div>
+                            <label class="option"><input type="radio" name="q18" value="a"> A) Reinforcement Learning from Artificial Intelligence Feedback</label>
+                            <label class="option"><input type="radio" name="q18" value="b"> B) Regular Learning AI Framework</label>
+                            <label class="option"><input type="radio" name="q18" value="c"> C) Rapid Language AI Format</label>
+                            <label class="option"><input type="radio" name="q18" value="d"> D) Recursive Learning AI Function</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">19. Какой метод оптимизации используется для дообучения модели в RLAIF?</div>
+                            <label class="option"><input type="radio" name="q19" value="a"> A) SGD (Stochastic Gradient Descent)</label>
+                            <label class="option"><input type="radio" name="q19" value="b"> B) Adam</label>
+                            <label class="option"><input type="radio" name="q19" value="c"> C) PPO (Proximal Policy Optimization)</label>
+                            <label class="option"><input type="radio" name="q19" value="d"> D) RMSprop</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">20. Во сколько раз RLAIF дешевле традиционного RLHF по данным Anthropic?</div>
+                            <label class="option"><input type="radio" name="q20" value="a"> A) Примерно в 2 раза</label>
+                            <label class="option"><input type="radio" name="q20" value="b"> B) Примерно в 5 раз</label>
+                            <label class="option"><input type="radio" name="q20" value="c"> C) Примерно в 10 раз</label>
+                            <label class="option"><input type="radio" name="q20" value="d"> D) Примерно в 50 раз</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">21. Какой параметр API отвечает за степень случайности ответов модели?</div>
+                            <label class="option"><input type="radio" name="q21" value="a"> A) max_tokens</label>
+                            <label class="option"><input type="radio" name="q21" value="b"> B) temperature</label>
+                            <label class="option"><input type="radio" name="q21" value="c"> C) top_p</label>
+                            <label class="option"><input type="radio" name="q21" value="d"> D) stop_sequences</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">22. Какой максимальный размер системного промпта допускается в Claude?</div>
+                            <label class="option"><input type="radio" name="q22" value="a"> A) 100 токенов</label>
+                            <label class="option"><input type="radio" name="q22" value="b"> B) 500 токенов</label>
+                            <label class="option"><input type="radio" name="q22" value="c"> C) 1000 токенов</label>
+                            <label class="option"><input type="radio" name="q22" value="d"> D) 5000 токенов</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">23. Какой XML-тег рекомендуется использовать для цепочки рассуждений (CoT)?</div>
+                            <label class="option"><input type="radio" name="q23" value="a"> A) &lt;thinking&gt;</label>
+                            <label class="option"><input type="radio" name="q23" value="b"> B) &lt;scratchpad&gt;</label>
+                            <label class="option"><input type="radio" name="q23" value="c"> C) &lt;logic&gt;</label>
+                            <label class="option"><input type="radio" name="q23" value="d"> D) &lt;reasoning&gt;</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">24. Каков прирост точности при использовании CoT для логических задач с условиями?</div>
+                            <label class="option"><input type="radio" name="q24" value="a"> A) +18%</label>
+                            <label class="option"><input type="radio" name="q24" value="b"> B) +27%</label>
+                            <label class="option"><input type="radio" name="q24" value="c"> C) +35%</label>
+                            <label class="option"><input type="radio" name="q24" value="d"> D) +50%</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">25. Какое оптимальное количество примеров для Few-shot learning в Claude?</div>
+                            <label class="option"><input type="radio" name="q25" value="a"> A) 1</label>
+                            <label class="option"><input type="radio" name="q25" value="b"> B) 2-5</label>
+                            <label class="option"><input type="radio" name="q25" value="c"> C) 10-15</label>
+                            <label class="option"><input type="radio" name="q25" value="d"> D) 50-100</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">26. Какое снижение времени ожидания ответа в службе поддержки достигается при внедрении Claude?</div>
+                            <label class="option"><input type="radio" name="q26" value="a"> A) С 30 минут до 5 минут</label>
+                            <label class="option"><input type="radio" name="q26" value="b"> B) С 15 минут до 30 секунд</label>
+                            <label class="option"><input type="radio" name="q26" value="c"> C) С 1 часа до 10 минут</label>
+                            <label class="option"><input type="radio" name="q26" value="d"> D) С 5 минут до 1 секунды</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">27. Какой процент запросов в службе поддержки может обрабатываться автоматически с помощью Claude?</div>
+                            <label class="option"><input type="radio" name="q27" value="a"> A) 20-30%</label>
+                            <label class="option"><input type="radio" name="q27" value="b"> B) 40-50%</label>
+                            <label class="option"><input type="radio" name="q27" value="c"> C) 65-80%</label>
+                            <label class="option"><input type="radio" name="q27" value="d"> D) 95-100%</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">28. Какова производительность Claude 3.5 Sonnet на бенчмарке HumanEval (pass@1)?</div>
+                            <label class="option"><input type="radio" name="q28" value="a"> A) 77%</label>
+                            <label class="option"><input type="radio" name="q28" value="b"> B) 79%</label>
+                            <label class="option"><input type="radio" name="q28" value="c"> C) 81%</label>
+                            <label class="option"><input type="radio" name="q28" value="d"> D) 85%</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">29. На какие типы запросов Claude запрограммирован отвечать отказом?</div>
+                            <label class="option"><input type="radio" name="q29" value="a"> A) Вопросы о погоде</label>
+                            <label class="option"><input type="radio" name="q29" value="b"> B) Медицинская диагностика и финансовые рекомендации</label>
+                            <label class="option"><input type="radio" name="q29" value="c"> C) Вопросы о программировании</label>
+                            <label class="option"><input type="radio" name="q29" value="d"> D) Перевод текста</label>
+                        </div>
+                        
+                        <div class="question">
+                            <div class="question-text">30. Какой инструмент используется для программного взаимодействия с Claude на Python?</div>
+                            <label class="option"><input type="radio" name="q30" value="a"> A) Библиотека openai</label>
+                            <label class="option"><input type="radio" name="q30" value="b"> B) Библиотека anthropic</label>
+                            <label class="option"><input type="radio" name="q30" value="c"> C) Библиотека transformers</label>
+                            <label class="option"><input type="radio" name="q30" value="d"> D) Библиотека tensorflow</label>
+                        </div>
+                        
+                        <div class="test-actions">
+                            <button type="button" class="btn btn-primary" onclick="checkAnswers()">✅ Проверить ответы</button>
+                            <button type="reset" class="btn btn-secondary" onclick="resetQuiz()">🔄 Сбросить всё</button>
+                        </div>
+                    </form>
+                    <div id="result" class="test-result"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <script>
+        // Правильные ответы на основе ваших лекций
+        const correctAnswers = {
+            q1: 'c', q2: 'b', q3: 'c', q4: 'b', q5: 'c',
+            q6: 'c', q7: 'c', q8: 'b', q9: 'c', q10: 'b',
+            q11: 'b', q12: 'c', q13: 'b', q14: 'c', q15: 'b',
+            q16: 'c', q17: 'd', q18: 'a', q19: 'c', q20: 'c',
+            q21: 'b', q22: 'c', q23: 'b', q24: 'b', q25: 'b',
+            q26: 'b', q27: 'c', q28: 'c', q29: 'b', q30: 'b'
+        };
+        
+        function updateProgress() {
+            let answered = 0;
+            for (let i = 1; i <= 30; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected) answered++;
+            }
+            const progressPercent = (answered / 30) * 100;
+            const progressFill = document.getElementById('progressFill');
+            if (progressFill) progressFill.style.width = progressPercent + '%';
+        }
+        
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', updateProgress);
+        });
+        
+        function checkAnswers() {
+            let score = 0;
+            let unanswered = [];
+            
+            for (let i = 1; i <= 30; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected) {
+                    if (selected.value === correctAnswers[`q${i}`]) score++;
+                } else {
+                    unanswered.push(i);
+                }
+            }
+            
+            const resultDiv = document.getElementById('result');
+            const percentage = (score / 30) * 100;
+            
+            let message = '';
+            let className = '';
+            
+            if (percentage >= 80) {
+                className = 'success';
+                message = `<i class="fas fa-trophy" style="font-size: 2.5rem; margin-bottom: 10px; color: #ffd700;"></i>
+                    <h2>Отлично!</h2><p>Вы набрали ${score} из 30 баллов (${percentage}%)</p>
+                    <p>Вы блестяще усвоили материал курса!</p>`;
+            } else if (percentage >= 60) {
+                className = 'success';
+                message = `<i class="fas fa-thumbs-up" style="font-size: 2.5rem; margin-bottom: 10px; color: #4caf50;"></i>
+                    <h2>Хороший результат!</h2><p>Вы набрали ${score} из 30 баллов (${percentage}%)</p>
+                    <p>Вы хорошо усвоили материал. Рекомендуем повторить некоторые разделы.</p>`;
+            } else if (percentage >= 40) {
+                className = 'fail';
+                message = `<i class="fas fa-book" style="font-size: 2.5rem; margin-bottom: 10px;"></i>
+                    <h2>Средний результат</h2><p>Вы набрали ${score} из 30 баллов (${percentage}%)</p>
+                    <p>Рекомендуем повторить лекции и лабораторные работы.</p>`;
+            } else {
+                className = 'fail';
+                message = `<i class="fas fa-graduation-cap" style="font-size: 2.5rem; margin-bottom: 10px;"></i>
+                    <h2>Стоит повторить материал</h2><p>Вы набрали ${score} из 30 баллов (${percentage}%)</p>
+                    <p>Рекомендуем внимательно изучить лекции и выполнить лабораторные работы.</p>`;
+            }
+            
+            if (unanswered.length > 0) {
+                message += `<p style="margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    <i class="fas fa-info-circle"></i> Вы не ответили на вопросы: № ${unanswered.join(', ')}</p>`;
+            }
+            
+            resultDiv.className = `test-result ${className}`;
+            resultDiv.innerHTML = message;
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function resetQuiz() {
+            document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+            updateProgress();
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'none';
+            resultDiv.className = 'test-result';
+            resultDiv.innerHTML = '';
+        }
+        
+        updateProgress();
+    </script>
+</body>
+</html>
